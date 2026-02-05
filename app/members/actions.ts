@@ -7,7 +7,7 @@ import Papa from "papaparse";
 import { headers } from "next/headers";
 
 export async function uploadMembers(formData: FormData) {
-    const host = headers().get("host");
+    const host = (await headers()).get("host");
     if (!host || (!host.includes("localhost") && !host.includes("127.0.0.1"))) {
         throw new Error("This feature is only available on localhost.");
     }
