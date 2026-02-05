@@ -21,6 +21,7 @@ export default function Home() {
   const [message, setMessage] = useState("");
   const [generatedMemberId, setGeneratedMemberId] = useState("");
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [googlePassUrl, setGooglePassUrl] = useState<string | null>(null);
   const cardRef = useRef<HTMLDivElement>(null);
 
   const selectedClubConfig = getClubConfig(clubId);
@@ -104,7 +105,7 @@ export default function Home() {
         }
         // In a real scenario, we might redirect or show download buttons
         if (data.googlePassUrl) {
-            window.open(data.googlePassUrl, '_blank');
+            setGooglePassUrl(data.googlePassUrl);
         }
         if (data.applePassData) {
             // Logic to trigger download of .pkpass
@@ -211,16 +212,33 @@ export default function Home() {
              </div>
              
              {generatedMemberId && (
-                 <button 
-                    type="button"
-                    onClick={() => {
-                        // Use existing functionality but perhaps with the already generated URL or ref
-                        handleDownloadImage();
-                    }}
-                    className="text-indigo-600 hover:text-indigo-800 underline"
-                 >
-                    Download Card as Image
-                 </button>
+                <div className="flex flex-col items-center gap-3 mt-4 w-full">
+                     {googlePassUrl && (
+                        <a 
+                            href={googlePassUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img 
+                                src="/google-wallet-button.png" 
+                                alt="Add to Google Wallet" 
+                                className="h-8 w-auto"
+                            />
+                        </a>
+                     )}
+                 
+                     <button 
+                        type="button"
+                        onClick={() => {
+                            // Use existing functionality but perhaps with the already generated URL or ref
+                            handleDownloadImage();
+                        }}
+                        className="text-indigo-600 hover:text-indigo-800 underline text-sm"
+                     >
+                        Download Card as Image
+                     </button>
+                </div>
              )}
           </div>
 
