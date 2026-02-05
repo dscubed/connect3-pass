@@ -110,7 +110,7 @@ export async function generateApplePass(data: PassData): Promise<Buffer> {
         }
 
         // Initialize PKPass
-        const pass = new PKPass(
+        const pass: any = new PKPass(
             {}, // No template directory
             {
                 signerCert,
