@@ -15,7 +15,7 @@ export default function Home() {
   
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  const [cardNumber, setCardNumber] = useState("");
+  const [studentId, setStudentId] = useState("");
   const [clubId, setClubId] = useState(defaultClubId);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
@@ -92,7 +92,7 @@ export default function Home() {
         body: JSON.stringify({ 
             firstName, 
             lastName, 
-            cardNumber, 
+            cardNumber: studentId, 
             club: clubId 
         }),
       });
@@ -271,12 +271,12 @@ export default function Home() {
             </div>
 
             <div>
-              <label htmlFor="cardNumber" className="block text-sm text-gray-700">Card Number</label>
+              <label htmlFor="studentId" className="block text-sm text-gray-700">Student ID</label>
               <input
                 type="text"
-                id="cardNumber"
-                value={cardNumber}
-                onChange={(e) => setCardNumber(e.target.value)}
+                id="studentId"
+                value={studentId}
+                onChange={(e) => setStudentId(e.target.value)}
                 required
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2 border"
                 placeholder="12345678"
