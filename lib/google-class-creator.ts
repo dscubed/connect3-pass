@@ -96,29 +96,12 @@ export async function deleteGenericClass(classId: string) {
 }
 
 // --- Legacy Wrapper for existing code compatibility ---
-export async function createGenericClass(issuerId: string, classIdSuffix: string, rawData: any) {
+export async function createGenericClass(issuerId: string, classIdSuffix: string, classTemplate: any) {
     const fullClassId = `${issuerId}.${classIdSuffix}`;
     
-    // Construct resource similar to before...
     const resource = {
+        ...classTemplate,
         id: fullClassId,
-        classTemplateInfo: {
-            cardTemplateOverride: {
-                cardRowTemplateInfos: [
-                    {
-                        twoItems: {
-                            startItem: { firstValue: { fields: [{ fieldPath: "object.textModulesData['member_id']" }] } },
-                            endItem: { firstValue: { fields: [{ fieldPath: "object.textModulesData['valid_for']" }] } }
-                        }
-                    }
-                ]
-            }
-        },
-        logo: rawData.logo,
-        heroImage: rawData.heroImage,
-        hexBackgroundColor: rawData.hexBackgroundColor,
-        textModulesData: rawData.textModulesData,
-        reviewStatus: "UNDER_REVIEW",
     };
 
     return await createOrUpdateGenericClass(fullClassId, resource);

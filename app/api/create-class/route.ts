@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createGenericClass } from "@/lib/google-class-creator";
-import data from "@/data.json";
+import classTemplate from "@/class-template.json";
 
 export async function GET(req: NextRequest) {
     try {
@@ -12,7 +12,7 @@ export async function GET(req: NextRequest) {
         // Define your desired class suffix here
         const classSuffix = "connect3-generic-v1"; // Or read from query param
 
-        const result = await createGenericClass(issuerId, classSuffix, data as any);
+        const result = await createGenericClass(issuerId, classSuffix, classTemplate);
 
         return NextResponse.json({
             success: true,

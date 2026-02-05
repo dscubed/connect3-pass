@@ -1,42 +1,18 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import classTemplate from "@/class-template.json";
 
 export default function AdminClassesPage() {
     const [classes, setClasses] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [jsonInput, setJsonInput] = useState("");
-    const [classIdSuffix, setClassIdSuffix] = useState("connect3-generic-new");
+    const [classIdSuffix, setClassIdSuffix] = useState("");
     const [message, setMessage] = useState("");
     const [issuerId, setIssuerId] = useState("");
 
     // Initial Template for convenience
-    const DEFAULT_TEMPLATE = {
-      "id": "ISSUER_ID.CLASS_ID_SUFFIX",
-      "classTemplateInfo": {
-        "cardTemplateOverride": {
-          "cardRowTemplateInfos": [
-            {
-              "twoItems": {
-                "startItem": { "firstValue": { "fields": [{ "fieldPath": "object.textModulesData['member_id']" }] } },
-                "endItem": { "firstValue": { "fields": [{ "fieldPath": "object.textModulesData['valid_for']" }] } }
-              }
-            }
-          ]
-        }
-      },
-      "logo": {
-        "sourceUri": { "uri": "https://c3-pass-assets.vercel.app/clubs/dscubed-logo.png" },
-        "contentDescription": { "defaultValue": { "language": "en-US", "value": "Club Logo" } }
-      },
-      "cardTitle": { "defaultValue": { "language": "en-US", "value": "New Membership" } },
-      "header": { "defaultValue": { "language": "en-US", "value": "Club Name" } },
-      "textModulesData": [
-          { "id": "member_id", "header": "Member ID", "body": "0000" },
-          { "id": "valid_for", "header": "Valid Until", "body": "2025" }
-      ],
-      "reviewStatus": "UNDER_REVIEW"
-    };
+    const DEFAULT_TEMPLATE = classTemplate;
 
     useEffect(() => {
         setJsonInput(JSON.stringify(DEFAULT_TEMPLATE, null, 2));
@@ -111,35 +87,6 @@ export default function AdminClassesPage() {
         }
     };
 
-    const handleDelete = async (classId: string, e: React.MouseEvent) => {
-        e.stopPropagation();
-        if (!confirm(`Are you sure you want to delete ${classId}? \nNote: You cannot delete a class if passes have been issued for it.`)) {
-            return;
-        }
-
-        setMessage(`Deleting ${classId}...`);
-        try {
-            const res = await fetch(`/api/admin/classes?id=${classId}`, {
-                method: "DELETE",
-            });
-            const result = await res.json();
-            
-            if (result.success) {
-                setMessage(`Deleted ${classId}`);
-                fetchClasses();
-                // Clear editor if deleted class was selected
-                if (classIdSuffix === classId) {
-                     setJsonInput(JSON.stringify(DEFAULT_TEMPLATE, null, 2));
-                     setClassIdSuffix(""); 
-                }
-            } else {
-                setMessage(`Error deleting: ${result.error}`);
-            }
-        } catch (err: any) {
-            setMessage(`Delete failed: ${err.message}`);
-        }
-    };
-
     const loadClassIntoEditor = (cls: any) => {
         setJsonInput(JSON.stringify(cls, null, 2));
         setClassIdSuffix(cls.id); // Load full ID
@@ -162,13 +109,6 @@ export default function AdminClassesPage() {
                                     <span className="font-bold text-gray-700 truncate mr-2" title={cls.id}>{cls.id}</span>
                                     <div className="flex space-x-2 shrink-0">
                                         <button className="text-xs bg-indigo-100 text-indigo-800 px-2 py-1 rounded hover:bg-indigo-200">Edit</button>
-                                        <button 
-                                            className="text-xs bg-gray-100 text-gray-400 px-2 py-1 rounded cursor-not-allowed"
-                                            title="Google API does not support deletion"
-                                            onClick={(e) => { e.stopPropagation(); alert("Google Wallet API does not support deleting classes."); }}
-                                        >
-                                            Del
-                                        </button>
                                     </div>
                                 </li>
                             ))}
@@ -204,7 +144,8 @@ export default function AdminClassesPage() {
                     <div className="flex justify-between items-center">
                         <button 
                             onClick={handleCreate}
-                            className="bg-indigo-600 text-white px-6 py-2 rounded hover:bg-indigo-700 font-bold"
+                            className="bg-indigo-600 text-white px-6 py-2 rounded hover:bg-indigo-700 font-bold disabled:bg-gray-300 disabled:cursor-not-allowed"
+                            disabled={!classIdSuffix}
                         >
                             Save Class
                         </button>
