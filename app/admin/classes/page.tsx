@@ -2,8 +2,12 @@
 
 import { useState, useEffect } from "react";
 import classTemplate from "@/public/class-template.json";
+import { notFound } from "next/navigation";
 
 export default function AdminClassesPage() {
+    if (process.env.NODE_ENV !== "development") {
+        notFound();
+    }
     const [classes, setClasses] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [jsonInput, setJsonInput] = useState("");

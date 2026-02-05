@@ -1,18 +1,20 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { notFound } from "next/navigation";
 import { CLUBS_CONFIG } from '@/lib/clubs-config';
 import { uploadMembers } from './actions';
 
 export default function MembersPage() {
-    const [isLocalhost, setIsLocalhost] = useState(false);
+    if (process.env.NODE_ENV !== "development") {
+        notFound();
+    }
     const [selectedClub, setSelectedClub] = useState("");
     const [file, setFile] = useState<File | null>(null);
     const [status, setStatus] = useState("");
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        setIsLocalhost(window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
         if (Object.keys(CLUBS_CONFIG).length > 0) {
             setSelectedClub(Object.keys(CLUBS_CONFIG)[0]);
         }
@@ -38,14 +40,6 @@ export default function MembersPage() {
             setLoading(false);
         }
     };
-
-    if (!isLocalhost) {
-        return (
-            <div className="p-10 text-center text-red-500 font-bold">
-                Access Denied: This tool is only available on localhost.
-            </div>
-        );
-    }
 
     return (
         <div className="min-h-screen p-8 bg-gray-50 text-black">

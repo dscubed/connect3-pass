@@ -4,12 +4,10 @@ import { supabaseAdmin } from "@/lib/supabase-admin";
 import { hashMemberData, MemberHash } from "@/lib/member-verification";
 import { getClubConfig } from "@/lib/clubs-config";
 import Papa from "papaparse";
-import { headers } from "next/headers";
 
 export async function uploadMembers(formData: FormData) {
-    const host = (await headers()).get("host");
-    if (!host || (!host.includes("localhost") && !host.includes("127.0.0.1"))) {
-        throw new Error("This feature is only available on localhost.");
+    if (process.env.NODE_ENV !== "development") {
+        throw new Error("This feature is only available in development mode.");
     }
 
     const file = formData.get("file") as File;

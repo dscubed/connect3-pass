@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { listGenericClasses, createOrUpdateGenericClass, deleteGenericClass } from "@/lib/google-class-creator";
 
 export async function GET(req: NextRequest) {
+    if (process.env.NODE_ENV !== "development") {
+        return NextResponse.json({ error: "Not found" }, { status: 404 });
+    }
     try {
         const issuerId = process.env.GOOGLE_ISSUER_ID;
         if (!issuerId) {
@@ -16,6 +19,9 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
+    if (process.env.NODE_ENV !== "development") {
+        return NextResponse.json({ error: "Not found" }, { status: 404 });
+    }
     try {
         const body = await req.json();
         const { id, json } = body;
@@ -42,6 +48,9 @@ export async function POST(req: NextRequest) {
 }
 
 export async function DELETE(req: NextRequest) {
+    if (process.env.NODE_ENV !== "development") {
+        return NextResponse.json({ error: "Not found" }, { status: 404 });
+    }
     try {
         const { searchParams } = new URL(req.url);
         const id = searchParams.get('id');
