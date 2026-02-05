@@ -49,13 +49,26 @@ export async function POST(req: NextRequest) {
         // that the client can handle.
         
         const googlePassUrl = await generateGooglePass(passData);
-        const applePassBuffer = await generateApplePass(passData);
+        
+        let applePassData;
+        if (process.env.APPLE_WALLET_SIGNER_CERT && 
+            process.env.APPLE_WALLET_PRIVATE_KEY && 
+            process.env.APPLE_WALLET_WWDR_CERT && 
+            process.env.APPLE_WALLET_PASS_TYPE_ID && 
+            process.env.APPLE_WALLET_TEAM_ID) {
+            try {
+                const applePassBuffer = await generateApplePass(passData);
+                applePassData = applePassBuffer.toJSON();
+            } catch (e) {
+                console.error("Failed to generate Apple Pass:", e);
+            }
+        }
 
         return NextResponse.json({
             success: true,
             message: "Passes generated successfully",
             googlePassUrl: googlePassUrl,
-            applePassData: applePassBuffer.toJSON(), // Convert buffer to JSON for transmission
+            applePassData: applePassData,
             memberId: memberId
         });
 
