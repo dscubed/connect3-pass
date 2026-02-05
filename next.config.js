@@ -14,6 +14,11 @@ const nextConfig = {
             },
         ],
     },
+    experimental: {
+        outputFileTracingIncludes: {
+            '/api/**/*': ['./class-template.json'],
+        },
+    },
 };
 
 module.exports = nextConfig;
