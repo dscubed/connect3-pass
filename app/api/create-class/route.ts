@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createGenericClass } from "@/lib/google-class-creator";
-import classTemplate from "@/class-template.json";
+import classTemplate from "@/public/class-template.json";
 
 export async function GET(req: NextRequest) {
     try {

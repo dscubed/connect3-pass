@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import classTemplate from "@/class-template.json";
+import classTemplate from "@/public/class-template.json";
 
 export default function AdminClassesPage() {
     const [classes, setClasses] = useState<any[]>([]);
