@@ -88,7 +88,11 @@ export default function MembersPage() {
                 </form>
 
                 {status && (
-                    <div className={`mt-4 p-3 rounded ${status.startsWith("Error") ? "bg-red-100 text-red-700" : "bg-green-100 text-green-700"}`}>
+                    <div className={`mt-4 p-3 rounded ${
+                        status.startsWith("Error") ? "bg-red-100 text-red-700" : 
+                        status.startsWith("Success") ? "bg-green-100 text-green-700" : 
+                        "bg-gray-100 text-gray-700"
+                    }`}>
                         {status}
                     </div>
                 )}

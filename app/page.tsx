@@ -100,7 +100,7 @@ export default function Home() {
     console.log("Form submitted via JS");
 
     setLoading(true);
-    setMessage("");
+    setMessage("Verifying info and generating pass...");
 
     try {
       const res = await fetch("/api/issue-pass", {
@@ -331,7 +331,13 @@ export default function Home() {
           </form>
 
           {message && (
-            <div className={`mt-4 text-center p-2 rounded ${message.includes("Error") ? "bg-red-100 text-red-700" : "bg-green-100 text-green-700"}`} style={{whiteSpace: 'pre-wrap'}}>
+            <div className={`mt-4 text-center p-2 rounded ${
+              message.toLowerCase().includes("error") || message.toLowerCase().includes("failed") 
+                ? "bg-red-100 text-red-700" 
+                : message.toLowerCase().includes("success") 
+                  ? "bg-green-100 text-green-700"
+                  : "bg-gray-100 text-gray-700"
+            }`} style={{whiteSpace: 'pre-wrap'}}>
               {message}
             </div>
           )}
