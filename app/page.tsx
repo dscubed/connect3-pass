@@ -32,7 +32,6 @@ export default function Home() {
             // Generating the image with a virtual width of 500px as requested
             const dataUrl = await toPng(cardRef.current, { 
                 width: 380,
-                cacheBust: true,
             });
             setPreviewUrl(dataUrl);
         } catch (err) {
@@ -40,6 +39,26 @@ export default function Home() {
         }
     }
   }, []);
+
+  // Preload images to ensure they are available for html-to-image
+  useEffect(() => {
+    const imageUrls = [
+      "https://c3-pass-assets.vercel.app/web-wallet/background.png",
+      "https://c3-pass-assets.vercel.app/web-wallet/characters.png"
+    ];
+    
+    Promise.all(imageUrls.map(url => {
+        return new Promise((resolve, reject) => {
+            const img = new window.Image();
+            img.src = url;
+            img.crossOrigin = "anonymous";
+            img.onload = resolve;
+            img.onerror = resolve; // Continue even if one fails
+        });
+    })).then(() => {
+        updatePreview();
+    });
+  }, [updatePreview]);
 
   // Update preview when relevant data changes
   useEffect(() => {
@@ -64,7 +83,7 @@ export default function Home() {
     }
 
     try {
-      const dataUrl = await toPng(cardRef.current, { cacheBust: true, pixelRatio: 2 });
+      const dataUrl = await toPng(cardRef.current, { pixelRatio: 2 });
       const link = document.createElement('a');
       link.download = 'membership-card.png';
       link.href = dataUrl;
@@ -140,10 +159,12 @@ export default function Home() {
                 <div ref={cardRef} className="w-[380px] max-w-full aspect-[18/25] bg-[url('https://c3-pass-assets.vercel.app/web-wallet/background.png')] bg-cover bg-center rounded-2xl shadow-xl flex flex-col items-center gap-4 overflow-hidden text-white p-3 select-none">
                     {/* Header */}
                     <div className="flex gap-2 items-center w-full">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img 
                           src={selectedClubConfig.logoUrl} 
                           alt={selectedClubConfig.displayName} 
                           className="w-8 h-8 object-contain rounded-full"
+                          crossOrigin="anonymous"
                         />
                         <span className="truncate line-clamp-1 text-shadow-lg" style={{
                           textShadow: '0 0 5px rgba(0,0,0,0.3)',
@@ -151,10 +172,12 @@ export default function Home() {
                     </div>
 
                     {/* Hero image */}
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img 
                       src="https://c3-pass-assets.vercel.app/web-wallet/characters.png" 
                       alt="Characters"
                       className="w-64 h-auto object-contain"
+                      crossOrigin="anonymous"
                     />
 
                     {/* Member Info */}
