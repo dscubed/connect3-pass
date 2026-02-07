@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect, useCallback } from "react";
 import Image from "next/image";
+import { useSearchParams } from "next/navigation";
 import QRCode from "react-qr-code";
 import { Fredoka } from "next/font/google";
 import { toPng } from 'html-to-image';
@@ -10,8 +11,11 @@ import { CLUBS_CONFIG, getClubConfig } from "@/lib/clubs-config";
 const fredoka = Fredoka({ subsets: ["latin"] });
 
 export default function Home() {
-  // Use the ID of the first club as default
-  const defaultClubId = Object.keys(CLUBS_CONFIG)[0] || "";
+  const searchParams = useSearchParams();
+  const clubParam = searchParams.get("club");
+  
+  // Use the query param if it exists and matches a club, otherwise default to empty
+  const defaultClubId = (clubParam && getClubConfig(clubParam)?.id === clubParam) ? clubParam : "";
   
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -96,6 +100,11 @@ export default function Home() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!clubId) {
+      setMessage("Error: Please select a club.");
+      return;
+    }
+
     e.stopPropagation();
     console.log("Form submitted via JS");
 
@@ -324,6 +333,7 @@ export default function Home() {
                 onChange={(e) => setClubId(e.target.value)}
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2 border"
               >
+                <option value="">Select a club...</option>
                 {Object.values(CLUBS_CONFIG).map((c) => (
                   <option key={c.id} value={c.id}>{c.displayName}</option>
                 ))}
