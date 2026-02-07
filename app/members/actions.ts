@@ -56,7 +56,7 @@ export async function uploadMembers(formData: FormData) {
             const cleanName = String(nameRaw).trim(); // "Doe, John"
             const cleanCard = String(cardRaw).trim();
             
-            const hashed = await hashMemberData(cleanName, cleanCard);
+            const hashed = await hashMemberData(cleanName, cleanCard, clubId);
             processedData.push(hashed);
         }
     }

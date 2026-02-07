@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from "uuid";
 import jwt from "jsonwebtoken";
 import { getClubConfig } from "@/lib/clubs-config";
 import { supabaseAdmin } from "@/lib/supabase-admin";
-import { verifyMemberHash, MemberHash } from "@/lib/member-verification";
+import { hashMemberData, MemberHash } from "@/lib/member-verification";
 
 // Placeholder verification function
 export async function verifyStudent(name: string, cardNumber: string, club: string): Promise<boolean> {
@@ -45,17 +45,11 @@ export async function verifyStudent(name: string, cardNumber: string, club: stri
         console.log(`Loaded ${members.length} members. Checking against: [${cleanName}, ${cleanCard}]`);
         
         // Check membership
-        // We have to check against all entries because we don't know which one (if any) matches without hashing with its salt
-        // This is computationally expensive O(N) but required by the data structure
-        const results = await Promise.all(
-            members.map(async (m) => {
-                const isMatch = await verifyMemberHash(cleanName, cleanCard, m.hash, m.salt);
-                if (isMatch) console.log("Found matching member!");
-                return isMatch;
-            })
-        );
+        // Compute hash once using club ID as salt
+        const computed = await hashMemberData(cleanName, cleanCard, club);
         
-        const isMember = results.includes(true);
+        // Check if hash exists in the list
+        const isMember = members.some(m => m.hash === computed.hash);
         console.log(`Verification result: ${isMember}`);
         return isMember;
         
