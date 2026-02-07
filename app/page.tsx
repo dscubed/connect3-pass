@@ -156,7 +156,17 @@ export default function Home() {
           <div className="mb-6 flex flex-col items-center space-y-4">
              {/* Card Preview - Hidden Source */}
              <div style={{ position: 'absolute', left: '-9999px', top: 0, opacity: 0, pointerEvents: 'none' }}>
-                <div ref={cardRef} className="w-[380px] max-w-full aspect-[18/25] bg-[url('https://c3-pass-assets.vercel.app/web-wallet/background.png')] bg-cover bg-center rounded-2xl shadow-xl flex flex-col items-center gap-4 overflow-hidden text-white p-3 select-none">
+                <div ref={cardRef} className="relative w-[380px] max-w-full aspect-[18/25] rounded-2xl shadow-xl flex flex-col items-center gap-4 overflow-hidden text-white p-3 select-none">
+                    {/* Background Image */}
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                        src="https://c3-pass-assets.vercel.app/web-wallet/background.png"
+                        alt="Background"
+                        className="absolute inset-0 w-full h-full object-cover"
+                        style={{ zIndex: -1 }}
+                        crossOrigin="anonymous"
+                    />
+
                     {/* Header */}
                     <div className="flex gap-2 items-center w-full">
                         {/* eslint-disable-next-line @next/next/no-img-element */}
