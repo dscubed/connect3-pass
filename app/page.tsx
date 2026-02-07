@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef, useEffect, useCallback, Suspense } from "react";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import QRCode from "react-qr-code";
@@ -10,7 +10,7 @@ import { CLUBS_CONFIG, getClubConfig } from "@/lib/clubs-config";
 
 const fredoka = Fredoka({ subsets: ["latin"] });
 
-export default function Home() {
+function HomeContent() {
   const searchParams = useSearchParams();
   const clubParam = searchParams.get("club");
   
@@ -375,5 +375,13 @@ export default function Home() {
         </div>
       </div>
     </main>
+  );
+}
+
+export default function Home() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <HomeContent />
+    </Suspense>
   );
 }
