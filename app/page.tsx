@@ -178,16 +178,27 @@ export default function Home() {
 
                     {/* Header */}
                     <div className="flex gap-2 items-center w-full">
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img 
-                          src={selectedClubConfig.logoUrl} 
-                          alt={selectedClubConfig.displayName} 
-                          className="w-8 h-8 object-contain rounded-full"
-                          crossOrigin="anonymous"
-                        />
-                        <span className="truncate line-clamp-1 text-shadow-lg" style={{
-                          textShadow: '0 0 5px rgba(0,0,0,0.3)',
-                        }}>{selectedClubConfig.displayName}</span>
+                        {clubId ? (
+                            <>
+                                {/* eslint-disable-next-line @next/next/no-img-element */}
+                                <img 
+                                src={selectedClubConfig.logoUrl} 
+                                alt={selectedClubConfig.displayName} 
+                                className="w-8 h-8 object-contain rounded-full"
+                                crossOrigin="anonymous"
+                                />
+                                <span className="truncate line-clamp-1 text-shadow-lg" style={{
+                                textShadow: '0 0 5px rgba(0,0,0,0.3)',
+                                }}>{selectedClubConfig.displayName}</span>
+                            </>
+                        ) : (
+                            <>
+                                <div className="w-8 h-8 bg-white rounded-full transition-all" />
+                                <span className="truncate line-clamp-1 text-shadow-lg" style={{
+                                textShadow: '0 0 5px rgba(0,0,0,0.3)',
+                                }}>Select a club</span>
+                            </>
+                        )}
                     </div>
 
                     {/* Hero image */}
