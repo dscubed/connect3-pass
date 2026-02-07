@@ -72,7 +72,7 @@ export default function MembersPage() {
                         />
                         <p className="text-xs text-gray-500 mt-1">
                             {selectedClub && CLUBS_CONFIG[selectedClub] 
-                                ? `Must contain '${CLUBS_CONFIG[selectedClub].memberTableColumns?.nameColumn || "Name"}' and '${CLUBS_CONFIG[selectedClub].memberTableColumns?.cardNumberColumn || "Card Number"}' columns`
+                                ? `Must contain '${CLUBS_CONFIG[selectedClub].memberTableColumns?.nameColumn || "Name"}' and '${CLUBS_CONFIG[selectedClub].memberTableColumns?.studentIdColumn || "Card Number"}' columns`
                                 : "Must contain required columns"
                             }
                         </p>

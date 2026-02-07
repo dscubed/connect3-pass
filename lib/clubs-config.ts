@@ -5,7 +5,7 @@ export interface ClubDefinition {
     logoUrl?: string; // URL for the club logo
     memberTableColumns: {
         nameColumn: string;
-        cardNumberColumn: string;
+        studentIdColumn: string;
     };
     nameFormat: string; // e.g., "{last}, {first}"
     benefits: string[]; // List of benefits for display
@@ -19,7 +19,7 @@ export const CLUBS_CONFIG: Record<string, ClubDefinition> = {
         logoUrl: "https://c3-pass-assets.vercel.app/clubs/dscubed-logo.png",
         memberTableColumns: {
             nameColumn: "Name",
-            cardNumberColumn: "Card Number"
+            studentIdColumn: "Card Number"
         },
         nameFormat: "{last}, {first}",
         benefits: [

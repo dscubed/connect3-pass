@@ -111,7 +111,7 @@ export default function Home() {
         body: JSON.stringify({ 
             firstName, 
             lastName, 
-            cardNumber: studentId, 
+            studentId, 
             club: clubId 
         }),
       });

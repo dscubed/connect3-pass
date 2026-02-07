@@ -6,16 +6,16 @@ import { supabaseAdmin } from "@/lib/supabase-admin";
 import { hashMemberData, MemberHash } from "@/lib/member-verification";
 
 // Placeholder verification function
-export async function verifyStudent(name: string, cardNumber: string, club: string): Promise<boolean> {
-    console.log(`Verifying ${name}, ${cardNumber} for ${club}`);
+export async function verifyStudent(name: string, studentId: string, club: string): Promise<boolean> {
+    console.log(`Verifying ${name}, ${studentId} for ${club}`);
     
     // Quick format check
     // Ensure case insensitivity for name match as per requirement
     const cleanName = String(name).trim(); // Keep case for display/hashing logic handling inside verifyMemberHash? 
     // Wait, verifyMemberHash forces lowercase on name. So passing raw is fine. nothing to do here other than trim.
-    const cleanCard = String(cardNumber).trim();
+    const cleanStudentId = String(studentId).trim();
     
-    if (!cleanName || !cleanCard || !club) return false;
+    if (!cleanName || !cleanStudentId || !club) return false;
 
     // Fetch members file from Supabase
     const bucketName = process.env.SUPABASE_STORAGE_BUCKET;
@@ -42,11 +42,11 @@ export async function verifyStudent(name: string, cardNumber: string, club: stri
         const text = await data.text();
         const members: MemberHash[] = JSON.parse(text);
         
-        console.log(`Loaded ${members.length} members. Checking against: [${cleanName}, ${cleanCard}]`);
+        console.log(`Loaded ${members.length} members. Checking against: [${cleanName}, ${cleanStudentId}]`);
         
         // Check membership
         // Compute hash once using club ID as salt
-        const computed = await hashMemberData(cleanName, cleanCard, club);
+        const computed = await hashMemberData(cleanName, cleanStudentId, club);
         
         // Check if hash exists in the list
         const isMember = members.some(m => m.hash === computed.hash);

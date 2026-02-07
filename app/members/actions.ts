@@ -23,7 +23,7 @@ export async function uploadMembers(formData: FormData) {
     }
 
     const nameCol = clubConfig.memberTableColumns?.nameColumn || "Name";
-    const cardCol = clubConfig.memberTableColumns?.cardNumberColumn || "Card Number";
+    const studentIdCol = clubConfig.memberTableColumns?.studentIdColumn || "Card Number";
 
     const text = await file.text();
     
@@ -43,26 +43,26 @@ export async function uploadMembers(formData: FormData) {
     // Helper to normalize config column names to match CSV headers
     const normalizeHeader = (h: string) => h.toLowerCase().trim().replace(/[\s_]+/g, "");
     const nameKey = normalizeHeader(nameCol);
-    const cardKey = normalizeHeader(cardCol);
+    const studentIdKey = normalizeHeader(studentIdCol);
 
     // Process each row
     for (const row of (data as any[])) {
         const nameRaw = row[nameKey];
-        const cardRaw = row[cardKey];
+        const studentIdRaw = row[studentIdKey];
 
-        if (nameRaw && cardRaw) {
+        if (nameRaw && studentIdRaw) {
             // Clean inputs
             // hashMemberData handles lowercasing for name compatibility
             const cleanName = String(nameRaw).trim(); // "Doe, John"
-            const cleanCard = String(cardRaw).trim();
+            const cleanStudentId = String(studentIdRaw).trim();
             
-            const hashed = await hashMemberData(cleanName, cleanCard, clubId);
+            const hashed = await hashMemberData(cleanName, cleanStudentId, clubId);
             processedData.push(hashed);
         }
     }
 
     if (processedData.length === 0) {
-        throw new Error(`No valid records found. Ensure CSV has '${nameCol}' and '${cardCol}' columns.`);
+        throw new Error(`No valid records found. Ensure CSV has '${nameCol}' and '${studentIdCol}' columns.`);
     }
 
     // Upload to Supabase Storage

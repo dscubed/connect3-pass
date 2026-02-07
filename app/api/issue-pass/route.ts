@@ -6,9 +6,9 @@ import { v4 as uuidv4 } from "uuid";
 export async function POST(req: NextRequest) {
     try {
         const body = await req.json();
-        const { firstName, lastName, cardNumber, club } = body;
+        const { firstName, lastName, studentId, club } = body;
 
-        if (!firstName || !lastName || !cardNumber || !club) {
+        if (!firstName || !lastName || !studentId || !club) {
             return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
         }
 
@@ -22,10 +22,10 @@ export async function POST(req: NextRequest) {
             .replace("{last}", lastName)
             .replace("{first}", firstName);
 
-        const isValid = await verifyStudent(verificationName, cardNumber, club);
+        const isValid = await verifyStudent(verificationName, studentId, club);
 
         if (!isValid) {
-            return NextResponse.json({ error: "Verification failed. Invalid Name or Card Number." }, { status: 403 });
+            return NextResponse.json({ error: "Verification failed. Invalid Name or Student ID." }, { status: 403 });
         }
 
         const memberId = uuidv4(); // Generate a unique member ID
@@ -35,7 +35,7 @@ export async function POST(req: NextRequest) {
 
         const passData: PassData = {
             name: displayName, 
-            studentId: cardNumber,
+            studentId: studentId,
             club,
             memberId
         };
