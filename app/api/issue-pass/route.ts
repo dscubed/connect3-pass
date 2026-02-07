@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { verifyStudent, generateApplePass, generateGooglePass, PassData } from "@/lib/pass-generator";
 import { getClubConfig } from "@/lib/clubs-config";
-import { v4 as uuidv4 } from "uuid";
 
 export async function POST(req: NextRequest) {
     try {
@@ -22,13 +21,13 @@ export async function POST(req: NextRequest) {
             .replace("{last}", lastName)
             .replace("{first}", firstName);
 
-        const isValid = await verifyStudent(verificationName, studentId, club);
+        const validationHash = await verifyStudent(verificationName, studentId, club);
 
-        if (!isValid) {
+        if (!validationHash) {
             return NextResponse.json({ error: "Verification failed. Invalid Name or Student ID." }, { status: 403 });
         }
 
-        const memberId = uuidv4(); // Generate a unique member ID
+        const memberId = validationHash; 
         // In a real app, you might look up the user's name from the DB
         
         const displayName = `${firstName} ${lastName}`;

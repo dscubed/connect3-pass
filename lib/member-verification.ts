@@ -12,7 +12,7 @@ export async function hashMemberData(name: string, studentId: string, clubName: 
     const salt = clubName;
     // Name is stored as "last, first" and case insensitive -> lowercase
     const input = `${name.toLowerCase().trim()}${studentId.trim()}`;
-    const derivedKey = (await scryptAsync(input, salt, 64)) as Buffer;
+    const derivedKey = (await scryptAsync(input, salt, 16)) as Buffer;
     
     return {
         hash: derivedKey.toString("hex")
@@ -22,7 +22,12 @@ export async function hashMemberData(name: string, studentId: string, clubName: 
 export async function verifyMemberHash(name: string, studentId: string, clubName: string, storedHash: string): Promise<boolean> {
     const input = `${name.toLowerCase().trim()}${studentId.trim()}`;
     const keyBuffer = Buffer.from(storedHash, "hex");
-    const derivedKey = (await scryptAsync(input, clubName, 64)) as Buffer;
+    const derivedKey = (await scryptAsync(input, clubName, 16)) as Buffer;
     
+    // Prevent timingSafeEqual error if lengths mismatch (e.g. comparing vs old long hash)
+    if (keyBuffer.length !== derivedKey.length) {
+        return false;
+    }
+
     return timingSafeEqual(keyBuffer, derivedKey);
 }

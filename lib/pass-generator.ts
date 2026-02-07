@@ -6,7 +6,7 @@ import { supabaseAdmin } from "@/lib/supabase-admin";
 import { hashMemberData, MemberHash } from "@/lib/member-verification";
 
 // Placeholder verification function
-export async function verifyStudent(name: string, studentId: string, club: string): Promise<boolean> {
+export async function verifyStudent(name: string, studentId: string, club: string): Promise<string | null> {
     console.log(`Verifying ${name}, ${studentId} for ${club}`);
     
     // Quick format check
@@ -15,13 +15,13 @@ export async function verifyStudent(name: string, studentId: string, club: strin
     // Wait, verifyMemberHash forces lowercase on name. So passing raw is fine. nothing to do here other than trim.
     const cleanStudentId = String(studentId).trim();
     
-    if (!cleanName || !cleanStudentId || !club) return false;
+    if (!cleanName || !cleanStudentId || !club) return null;
 
     // Fetch members file from Supabase
     const bucketName = process.env.SUPABASE_STORAGE_BUCKET;
     if (!bucketName) {
         console.error("SUPABASE_STORAGE_BUCKET not set");
-        return false;
+        return null;
     }
     
     const fileName = `${club}-members.json`;
@@ -36,7 +36,7 @@ export async function verifyStudent(name: string, studentId: string, club: strin
             console.warn(`Could not fetch members list for ${club}:`, error.message);
             console.warn(`Details: bucket=${bucketName}, file=${fileName}`);
             // If file doesn't exist, nobody is a member
-            return false;
+            return null;
         }
         
         const text = await data.text();
@@ -51,11 +51,11 @@ export async function verifyStudent(name: string, studentId: string, club: strin
         // Check if hash exists in the list
         const isMember = members.some(m => m.hash === computed.hash);
         console.log(`Verification result: ${isMember}`);
-        return isMember;
+        return isMember ? computed.hash : null;
         
     } catch (e) {
         console.error("Error during verification:", e);
-        return false;
+        return null;
     }
 }
 
