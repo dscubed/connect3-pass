@@ -23,8 +23,9 @@ export const CLUBS_CONFIG: Record<string, ClubDefinition> = {
         },
         nameFormat: "{last}, {first}",
         benefits: [
-            "Carte Crepes 10%",
-            "Professors Walk Cafe 10%",
+            "Carte Crepes - 10%",
+            "Professors Walk Cafe - 10%",
+            "Gilbert - 10% on coffee",
         ],
     },
 };
