@@ -174,6 +174,7 @@ function HomeContent() {
                         className="absolute inset-0 w-full h-full object-cover"
                         style={{ zIndex: -1 }}
                         crossOrigin="anonymous"
+                        onLoad={() => updatePreview()}
                     />
 
                     {/* Header */}
@@ -186,6 +187,7 @@ function HomeContent() {
                                 alt={selectedClubConfig.displayName} 
                                 className="w-8 h-8 object-contain rounded-full"
                                 crossOrigin="anonymous"
+                                onLoad={() => updatePreview()}
                                 />
                                 <span className="truncate line-clamp-1 text-shadow-lg" style={{
                                 textShadow: '0 0 5px rgba(0,0,0,0.3)',
@@ -208,6 +210,7 @@ function HomeContent() {
                       alt="Characters"
                       className="w-64 h-auto object-contain"
                       crossOrigin="anonymous"
+                      onLoad={() => updatePreview()}
                     />
 
                     {/* Member Info */}
