@@ -33,9 +33,23 @@ function HomeContent() {
   const updatePreview = useCallback(async () => {
     if (cardRef.current) {
         try {
-            // Generating the image with a virtual width of 500px as requested
+            // Wait for fonts to load
+            await document.fonts.ready;
+
+            // Safari fix: Multiple passes ensures images are fully painted onto the canvas
+            // First pass warms up the cache
+            await toPng(cardRef.current, { 
+                width: 380,
+                cacheBust: true, 
+            });
+
+            // Small delay to let the browser catch up
+            await new Promise(resolve => setTimeout(resolve, 100));
+
+            // Second pass for the final image
             const dataUrl = await toPng(cardRef.current, { 
                 width: 380,
+                cacheBust: true,
             });
             setPreviewUrl(dataUrl);
         } catch (err) {
