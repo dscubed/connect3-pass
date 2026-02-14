@@ -253,10 +253,12 @@ function HomeContent() {
                             className="w-28 h-28 p-2 bg-white rounded-md"
                         />
                         <div className="min-w-0 flex-1 w-full">
-                            <p className="font-medium">Benefits</p>
-                            {selectedClubConfig.benefits.map((benefit, idx) => (
+                            <p className="font-medium min-w-40">Benefits</p>
+                            {clubId ? selectedClubConfig.benefits.map((benefit, idx) => (
                               <span key={idx} className="line-clamp-1 truncate">{benefit}</span>
-                            ))}
+                            )) : (
+                              <span className="line-clamp-1 truncate">--</span>
+                            )}
                         </div>
                     </div>
 
